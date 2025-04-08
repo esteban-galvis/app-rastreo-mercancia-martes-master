@@ -1,8 +1,27 @@
 import { useState } from 'react'
+import { usuarios } from '../services/database'
+import { useNavigate } from 'react-router-dom'
 import './Login.css'
+import { alertaError, alertaRedireccion } from '../helpers/funciones'
+
 function Login() {
   const [getUser, setUser] = useState("")
   const [getPassword, setPassword] = useState("")
+
+  let redireccion =useNavigate()
+
+  function buscarUsuario(){
+    let usuarioEncontrado = usuarios.find((item) => getUser == item.usuario && getPassword == item.contrasena)
+    return usuarioEncontrado
+  }
+
+  function iniciarSesion(){
+    if (buscarUsuario()) {
+      alertaRedireccion(redireccion, "Bienvenido al sistema", "/home")
+    } else {
+      alertaError()
+    }
+  }
   
   return (
     <div class="container">
@@ -10,9 +29,9 @@ function Login() {
       <form class="form">
         <div class="form_front">
           <div class="form_details">Login</div>
-          <input type="text" class="input" placeholder="Username" />
-          <input type="text" class="input" placeholder="Password" />
-          <button class="btn">Login</button>
+          <input onChange={(e) => setUser(e.target.value)} type="text" class="input" placeholder="Username" />
+          <input onChange={(e) => setPassword(e.target.value)}  type="text" class="input" placeholder="Password" />
+          <button type="button" onClick={iniciarSesion} class="btn">Login</button>
           <span class="switch">Don't have an account?
             <label for="signup_toggle" class="signup_tog">
               Sign Up
