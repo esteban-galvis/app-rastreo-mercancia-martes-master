@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { usuarios } from '../services/database'
 import { useNavigate } from 'react-router-dom'
 import './Login.css'
-import { alertaError, alertaRedireccion } from '../helpers/funciones'
+import { alertaError, alertaRedireccion, generarToken } from '../helpers/funciones'
 
 function Login() {
   const [getUser, setUser] = useState("")
@@ -17,6 +17,9 @@ function Login() {
 
   function iniciarSesion(){
     if (buscarUsuario()) {
+      let token = generarToken();
+      localStorage.setItem("token", token);
+      localStorage.setItem("usuario", JSON.stringify(buscarUsuario()));
       alertaRedireccion(redireccion, "Bienvenido al sistema", "/home")
     } else {
       alertaError()
